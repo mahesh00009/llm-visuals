@@ -1,7 +1,12 @@
+import './App.css'
+
+import LLMVisualization from "./components/LLMVisualization"
 
 const App = () => {
   return (
-    <div>App component</div>
+    <div>
+      <LLMVisualization />
+    </div>
   )
 }
 
