@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Pause, RotateCcw, ChevronRight, Brain, Zap, Eye, MessageSquare } from 'lucide-react';
 
-interface Token {
-  token: string;
-  vector: number[];
-}
+import type { Token, Step  } from '../types/types';
 
-interface Step {
-  name: string;
-  icon: React.ComponentType<{ size?: number }>;
-  description: string;
-}
 
 const LLMVisualization: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
