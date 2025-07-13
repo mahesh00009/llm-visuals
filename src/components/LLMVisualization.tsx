@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, ChevronRight, Brain, Zap, Eye, MessageSquare, SlidersHorizontal } from 'lucide-react';
 
 import type { Token, Step } from '../types/types';
@@ -13,6 +13,8 @@ const LLMVisualization: React.FC = () => {
   const [output, setOutput] = useState<string>("");
   const [animationSpeed, setAnimationSpeed] = useState<number>(2000);
   const [embeddingDimension, setEmbeddingDimension] = useState<number>(8);
+
+  const visualizationContentRef = useRef<HTMLDivElement>(null);
 
   const steps: Step[] = [
     { name: "Input Text", icon: MessageSquare, description: "Raw text input" },
@@ -117,8 +119,8 @@ const LLMVisualization: React.FC = () => {
     return generatedPart;
   };
 
-useEffect(() => {
-    let timer: number; // Changed from NodeJS.Timeout to number
+  useEffect(() => {
+    let timer: number; 
     if (isPlaying && currentStep < steps.length - 1) {
       timer = setTimeout(() => {
         setCurrentStep(prevStep => prevStep + 1);
@@ -129,6 +131,14 @@ useEffect(() => {
     return () => clearTimeout(timer);
   }, [currentStep, isPlaying, steps.length, animationSpeed]);
 
+  useEffect(() => {
+    if (isPlaying && visualizationContentRef.current) {
+      visualizationContentRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }, [isPlaying]);
 
   useEffect(() => {
     const tokenList = tokenizeText(inputText);
@@ -480,7 +490,7 @@ useEffect(() => {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+          <div ref={visualizationContentRef} className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
             <h3 className="text-xl font-bold mb-4 text-gray-800 flex items-center">
               <MessageSquare className="mr-2 text-blue-500" size={20} />
               Input Text
